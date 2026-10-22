@@ -17,7 +17,7 @@ export function Footer() {
             hoverAccent
           />
         </p>
-        <FadeIn delay={0.3}>
+        <FadeIn delay={0.3} margin="0px 0px 0px 0px">
           <div className="mt-8 flex flex-col justify-between gap-3 font-mono text-[13px] text-muted sm:flex-row">
             <p>
               Made with love by{" "}

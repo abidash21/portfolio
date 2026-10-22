@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import { Fragment } from "react";
+import { motion, useInView, useReducedMotion } from "motion/react";
+import { Fragment, useRef } from "react";
 
 type SplitTextProps = {
   text: string;
@@ -12,7 +12,9 @@ type SplitTextProps = {
 };
 
 // Reveals text a word (or letter) at a time, each rising out of its own
-// clipped line. Screen readers get the plain string once.
+// clipped line. Screen readers get the plain string once. Visibility is
+// watched on the wrapper, not each letter: a letter starts clipped by its
+// line, so it barely intersects and may never trigger near the page end.
 export function SplitText({
   text,
   by = "word",
@@ -21,13 +23,15 @@ export function SplitText({
   hoverAccent = false,
 }: SplitTextProps) {
   const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -60px 0px" });
   const words = text.split(" ");
   let index = 0;
 
   return (
     <>
       <span className="sr-only">{text}</span>
-      <span aria-hidden="true">
+      <span ref={ref} aria-hidden="true">
         {words.map((word, w) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: words are static and ordered
           <Fragment key={`${word}-${w}`}>
@@ -47,8 +51,11 @@ export function SplitText({
                           : "inline-block"
                       }
                       initial={{ opacity: 0, transform: "translateY(105%)" }}
-                      whileInView={{ opacity: 1, transform: "translateY(0%)" }}
-                      viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+                      animate={
+                        inView
+                          ? { opacity: 1, transform: "translateY(0%)" }
+                          : undefined
+                      }
                       transition={{
                         duration: 0.7,
                         delay: delay + i * stagger,
