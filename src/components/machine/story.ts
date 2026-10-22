@@ -168,3 +168,12 @@ export const STAGES: Record<ModuleId, string> = {
   services: "Services",
   data: "Data",
 };
+
+// What each tray is for, shown in the status line while it is hovered.
+export const ROLES: Record<ModuleId, string> = {
+  roadmap: "plan, prioritise, measure",
+  workbench: "code, test, commit",
+  pipeline: "build, test, review",
+  services: "events in flight",
+  data: "store, measure",
+};

@@ -185,7 +185,7 @@ export function MachineScene({
       >
         <div
           ref={heroRef}
-          className="lg:relative lg:z-10 lg:col-span-12 lg:col-start-1 lg:row-start-1"
+          className="lg:pointer-events-none lg:relative lg:z-10 lg:col-span-12 lg:col-start-1 lg:row-start-1 lg:[&_a,&_button,&_.split-char-hover]:pointer-events-auto"
         >
           {hero}
         </div>

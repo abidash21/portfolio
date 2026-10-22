@@ -5,10 +5,16 @@ import {
   useMotionValue,
   useMotionValueEvent,
 } from "motion/react";
-import { type ReactElement, useCallback, useEffect, useRef } from "react";
+import {
+  type PointerEvent,
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import type { Point3 } from "@/components/iso/iso-kit";
 import "@/components/iso/iso.css";
-import { useInView, useLoop } from "@/components/iso/react/live";
+import { follow, useInView, useLoop } from "@/components/iso/react/live";
 import "./engine.css";
 import { useStory } from "./scene";
 import {
@@ -22,11 +28,13 @@ import {
   LOG,
   needleLevel,
   needlePath,
+  ROLES,
   SHIPPED,
   STAGES,
   STOPS,
 } from "./story";
 import {
+  at,
   BAR_RISE,
   EX,
   EY,
@@ -90,6 +98,20 @@ function statusOf(journey: number, kpi: number, tray: ModuleId) {
   return { index: MODULES[id].index, name: STAGES[id], detail };
 }
 
+// The pointer layer sits on top of the scroll story and never changes it:
+// the hovered tray lifts a little more, and the gaps around the pointer open.
+const HOVER_LIFT = 6;
+const LEAN = 8;
+const LEAN_REACH = 40;
+const SETTLE = 0.18;
+const NONE: Record<ModuleId, number> = {
+  data: 0,
+  services: 0,
+  pipeline: 0,
+  workbench: 0,
+  roadmap: 0,
+};
+
 type Props = Record<ModuleId | "ticket", ReactElement> & {
   label: string;
   className?: string;
@@ -111,6 +133,13 @@ export function MachineLive({ label, className, ticket, ...modules }: Props) {
   const statusRef = useRef<HTMLParagraphElement>(null);
   const said = useRef("");
   const inView = useInView(root);
+  // Pointer state: which tray is hovered, the eased extra lifts, and the
+  // lean toward the pointer's height in world z.
+  const hover = useRef<ModuleId | null>(null);
+  const extra = useRef({ ...NONE });
+  const scrollLift = useRef({ ...NONE });
+  const lean = useRef({ on: 0, z: 0 });
+  const leanTarget = useRef(0);
 
   const render = useCallback(() => {
     const node = root.current;
@@ -127,7 +156,8 @@ export function MachineLive({ label, className, ticket, ...modules }: Props) {
       roadmap: 0,
     };
     for (const id of ORDER) {
-      lift[id] = MODULES[id].lift * GAP * shareOf(id, e);
+      scrollLift.current[id] = MODULES[id].lift * GAP * shareOf(id, e);
+      lift[id] = scrollLift.current[id] + extra.current[id];
       const group = groups.current[id];
       if (!group) continue;
       if (lift[id])
@@ -164,14 +194,13 @@ export function MachineLive({ label, className, ticket, ...modules }: Props) {
       card.setAttribute("transform", translate(p));
     }
 
-    // Focus: while the ticket is travelling, the tray it is in leads.
+    // Focus: the hovered tray, or while the ticket is travelling, the tray
+    // it is in.
     const travelling = e > 0.6 && j > 0 && j < 1 && k < 0.2;
-    node.toggleAttribute("data-focus", travelling);
+    const focus = hover.current ?? (travelling ? a.tray : null);
+    node.toggleAttribute("data-focus", focus !== null);
     for (const id of ORDER) {
-      groups.current[id]?.toggleAttribute(
-        "data-on",
-        travelling && id === a.tray,
-      );
+      groups.current[id]?.toggleAttribute("data-on", id === focus);
     }
 
     for (const [i, at] of GATE_AT.entries()) {
@@ -190,7 +219,13 @@ export function MachineLive({ label, className, ticket, ...modules }: Props) {
       });
     }
 
-    const status = statusOf(j, k, a.tray);
+    const status = hover.current
+      ? {
+          index: MODULES[hover.current].index,
+          name: STAGES[hover.current],
+          detail: ROLES[hover.current],
+        }
+      : statusOf(j, k, a.tray);
     const line = `${status.index}|${status.name}|${status.detail}`;
     const holder = statusRef.current;
     if (holder && line !== said.current) {
@@ -277,17 +312,89 @@ export function MachineLive({ label, className, ticket, ...modules }: Props) {
   useMotionValueEvent(journey, "change", render);
   useMotionValueEvent(kpi, "change", render);
 
-  // Run the message lanes only while the figure is on screen and open.
-  useLoop((dt, calm) => {
+  // Eases the pointer layer toward its targets; true while still moving.
+  const settle = useCallback(
+    (dt: number, calm: boolean) => {
+      const was = { ...extra.current };
+      const l = lean.current;
+      l.on = follow(l.on, calm ? 0 : leanTarget.current, dt, SETTLE, calm);
+      let moving = l.on !== (calm ? 0 : leanTarget.current);
+      for (const id of ORDER) {
+        const z = MODULES[id].z + MODULES[id].h / 2 + scrollLift.current[id];
+        const away = Math.max(-1, Math.min(1, (z - l.z) / LEAN_REACH));
+        const target = calm
+          ? 0
+          : (hover.current === id ? HOVER_LIFT : 0) + LEAN * l.on * away;
+        extra.current[id] = follow(extra.current[id], target, dt, SETTLE, calm);
+        if (extra.current[id] !== target) moving = true;
+      }
+      if (ORDER.some((id) => was[id] !== extra.current[id])) render();
+      return moving;
+    },
+    [render],
+  );
+
+  // Run the message lanes while the figure is on screen and open, and the
+  // pointer layer while it is settling.
+  const kick = useLoop((dt, calm) => {
+    const moving = settle(dt, calm);
     if (calm) return false;
-    if (explode.get() < 0.15) return true;
-    clock.current += dt;
-    place(clock.current);
-    return true;
+    if (explode.get() >= 0.15) {
+      clock.current += dt;
+      place(clock.current);
+    }
+    return inView || moving;
   }, inView);
 
+  // Hit-test against where the trays sit in the scroll story, not where the
+  // pointer layer has nudged them, so a lifted tray never slips away from
+  // under the cursor.
+  const point = (event: PointerEvent) => {
+    const svg = svgRef.current;
+    const matrix = svg?.getScreenCTM()?.inverse();
+    if (!svg || !matrix) return;
+    const { x, y } = new DOMPoint(event.clientX, event.clientY).matrixTransform(
+      matrix,
+    );
+    const origin = at([0, 0, 0]);
+    let best: ModuleId | null = null;
+    let near = Number.POSITIVE_INFINITY;
+    for (const id of ORDER) {
+      const z = MODULES[id].z + MODULES[id].h / 2 + scrollLift.current[id];
+      const gap = Math.abs(origin[1] + EZ[1] * z - y);
+      if (gap < near) {
+        near = gap;
+        best = id;
+      }
+    }
+    const inside = x >= 0 && x <= WIDTH && near < 60;
+    const next = inside ? best : null;
+    lean.current.z = (y - origin[1]) / EZ[1];
+    leanTarget.current = inside ? 1 : 0;
+    if (next !== hover.current) {
+      hover.current = next;
+      render();
+    }
+    kick();
+  };
+
+  const leave = () => {
+    leanTarget.current = 0;
+    if (hover.current) {
+      hover.current = null;
+      render();
+    }
+    kick();
+  };
+
   return (
-    <div ref={root} className={`iso le ${className ?? ""}`}>
+    <div
+      ref={root}
+      className={`iso le ${className ?? ""}`}
+      onPointerMove={point}
+      onPointerDown={point}
+      onPointerLeave={leave}
+    >
       <svg
         ref={svgRef}
         className="iso-svg le-svg"
