@@ -1,26 +1,166 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #121315;
+  --surface: #1a1b1e;
+  --surface-strong: #222428;
+  --ink: #ecece8;
+  --muted: #9a9ca3;
+  --accent: #3dff8f;
+  --grid-minor: color-mix(in oklab, var(--ink) 6%, transparent);
+  --grid-major: color-mix(in oklab, var(--ink) 12%, transparent);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-instrument-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Links and buttons: colour on hover, a small press on click. */
+.link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--ink) 30%, transparent);
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+  transition:
+    color 150ms ease,
+    text-decoration-color 150ms ease;
+}
+
+.press {
+  transition: transform 160ms var(--ease-out);
+}
+
+.press:active {
+  transform: scale(0.97);
+}
+
+/* Secondary button: outlined, fills with neon on hover. */
+.btn-outline {
+  border: 1px solid color-mix(in oklab, var(--ink) 25%, transparent);
+  transition:
+    transform 160ms var(--ease-out),
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+}
+
+/* Nav links: a green bar slides in under the label on hover. */
+.nav-link {
+  position: relative;
+  transition: color 150ms ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 260ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+  .nav-link:hover {
+    color: var(--ink);
+  }
+  .nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .press:active {
+    transform: none;
+  }
+  .nav-link::after {
+    transition: none;
+  }
+}
+
+/* A terminal caret that blinks a few times after the hero lands, then rests. */
+.caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 1.05em;
+  margin-left: 0.3em;
+  vertical-align: -0.15em;
+  background: var(--accent);
+  opacity: 0;
+  animation: caret-blink 1s steps(1) 1.4s 5;
+}
+
+@keyframes caret-blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    display: none;
+  }
 }
