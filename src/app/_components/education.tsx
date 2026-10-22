@@ -32,7 +32,7 @@ export function Education() {
                   {item.site}
                 </a>
                 {item.note && (
-                  <span className="rounded-full border border-accent/40 px-2 py-0.5 text-[12px] leading-none text-accent">
+                  <span className="rounded-full border border-accent/40 px-2 py-0.5 text-xs leading-none text-accent shrink-0">
                     {item.note}
                   </span>
                 )}

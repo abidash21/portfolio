@@ -1,0 +1,131 @@
+/* The kit's dark tokens, retuned to the site: paper is the page, lines come
+   off the ink, and the one lit accent is the site's green. */
+.iso.le {
+  --anatomy-paper: var(--bg);
+  --anatomy-face: #1c1d20;
+  --anatomy-top: #1e1f22;
+  --anatomy-shade-0: #0f1012;
+  --anatomy-shade-1: #131416;
+  --anatomy-shade-2: #17181b;
+  --anatomy-shade-3: #1b1c1f;
+  --anatomy-lit-top: color-mix(in oklab, var(--accent) 16%, var(--bg));
+  --anatomy-lit-shade: color-mix(in oklab, var(--accent) 9%, var(--bg));
+  --anatomy-hi: color-mix(in oklab, var(--ink) 90%, var(--bg));
+  --anatomy-mid: color-mix(in oklab, var(--ink) 50%, var(--bg));
+  --anatomy-lo: color-mix(in oklab, var(--ink) 30%, var(--bg));
+  --anatomy-faint: color-mix(in oklab, var(--ink) 13%, var(--bg));
+  --anatomy-lit: var(--accent);
+  --anatomy-dot: var(--ink);
+  --anatomy-halo: #050506;
+  --anatomy-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/* The figure, with its status line set top to bottom on its right. */
+.le {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.le-svg {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-height: calc(100svh - 8rem);
+  margin-inline: auto;
+}
+
+.le-status {
+  flex: none;
+  display: flex;
+  gap: 0.9em;
+  margin: 0;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  font-family: var(--anatomy-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.le-status-index {
+  color: var(--accent);
+}
+
+.le-status-name {
+  color: var(--ink);
+  text-transform: uppercase;
+}
+
+@media (max-width: 1023px) {
+  .le {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .le-status {
+    writing-mode: horizontal-tb;
+  }
+}
+
+.le-svg rect {
+  vector-effect: non-scaling-stroke;
+}
+
+.le-plate {
+  fill: var(--anatomy-shade-1);
+  stroke: var(--anatomy-lo);
+  stroke-width: var(--anatomy-weight);
+}
+
+.le-index {
+  fill: var(--anatomy-mid);
+  letter-spacing: 0.06em;
+}
+
+.le-slot {
+  fill: #0b0c0d;
+  stroke: var(--anatomy-lo);
+  stroke-width: var(--anatomy-weight);
+}
+
+.le-void {
+  fill: #0b0c0d;
+  stroke: none;
+}
+
+.le-screen {
+  fill: #08090a;
+  stroke: var(--anatomy-lo);
+  stroke-width: var(--anatomy-weight);
+}
+
+.le-screen-text {
+  fill: var(--accent);
+  font-family: var(--anatomy-mono);
+  white-space: pre;
+}
+
+/* While the ticket travels, the tray it is in leads and the rest step back. */
+/* Dimmed with brightness, not opacity, so the trays stay solid. */
+.le [data-module] {
+  transition: filter 500ms var(--ease-out);
+}
+
+.le[data-focus] [data-module]:not([data-on]) {
+  filter: brightness(0.62);
+}
+
+.le [data-module][data-on] [data-leds] circle {
+  fill: var(--accent);
+  opacity: 1;
+}
+
+.le [data-done] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .le [data-module] {
+    transition: none;
+  }
+}

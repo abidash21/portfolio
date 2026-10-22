@@ -5,10 +5,7 @@ import { profile } from "@/content/resume";
 
 export function Hero() {
   return (
-    <section
-      aria-labelledby="hero-title"
-      className="flex min-h-[78svh] flex-col justify-between gap-16 pt-16 pb-8 md:pt-24"
-    >
+    <section aria-labelledby="hero-title" className="pt-16 md:pt-24">
       <div>
         <h1
           id="hero-title"
