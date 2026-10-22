@@ -5,12 +5,14 @@ import { Education } from "./_components/education";
 import { Footer } from "./_components/footer";
 import { Header } from "./_components/header";
 import { Hero } from "./_components/hero";
+import { JsonLd } from "./_components/json-ld";
 import { Skills } from "./_components/skills";
 import { Work } from "./_components/work";
 
 export default function Home() {
   return (
     <div id="top" className="mx-auto max-w-300 px-4 sm:px-6 md:px-8">
+      <JsonLd />
       <Header />
       <main className="pb-16 md:pb-20">
         <MachineScene

@@ -102,9 +102,9 @@ p {
 .nav-link::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -4px;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.375rem;
   height: 2px;
   background: var(--accent);
   transform: scaleX(0);

@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import { MathBackground } from "@/components/math-background";
 import { ScrollProgress } from "@/components/scroll-progress";
+import { profile } from "@/content/resume";
+import { site, siteUrl } from "@/content/site";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -15,15 +17,40 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Abinash Dash — Software Engineer",
-  description:
-    "Software engineer building lending systems at Equall with Spring Boot, Kafka and Kotlin. Based in Bengaluru.",
+  metadataBase: siteUrl,
+  title: site.title,
+  description: site.description,
+  applicationName: profile.name,
+  authors: [{ name: profile.name, url: siteUrl }],
+  creator: profile.name,
+  keywords: site.keywords,
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Abinash Dash — Software Engineer",
-    description:
-      "Backend and distributed systems: loan journeys, Kafka pipelines, document engines.",
-    type: "website",
+    type: "profile",
+    url: "/",
+    siteName: profile.name,
+    locale: site.locale,
+    title: site.title,
+    description: site.shareDescription,
+    firstName: "Abinash",
+    lastName: "Dash",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: site.title,
+    description: site.shareDescription,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  formatDetection: { telephone: false, email: false, address: false },
 };
 
 export const viewport: Viewport = {
