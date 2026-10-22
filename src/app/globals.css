@@ -20,7 +20,8 @@
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
-  --font-sans: var(--font-instrument-sans);
+  --font-sans: var(--font-bricolage);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 html {
@@ -32,7 +33,6 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans), system-ui, sans-serif;
-  font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
 }
 

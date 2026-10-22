@@ -32,7 +32,7 @@ function Header() {
         {profile.name}
       </a>
       <nav aria-label="Primary" className="flex items-center gap-6">
-        <ul className="hidden items-center gap-6 text-[15px] text-muted sm:flex">
+        <ul className="hidden items-center gap-6 font-mono text-[13px] tracking-[0.08em] text-muted uppercase sm:flex">
           {nav.map((item) => (
             <li key={item.href}>
               <a href={item.href} className="nav-link">
@@ -112,9 +112,13 @@ function Work() {
               <p className="mt-2 text-[17px] leading-relaxed">
                 {role.role}
                 <br />
-                <span className="text-muted">{role.location}</span>
+                <span className="font-mono text-[14px] text-muted">
+                  {role.location}
+                </span>
                 <br />
-                <span className="text-muted">{role.period}</span>
+                <span className="font-mono text-[14px] text-muted">
+                  {role.period}
+                </span>
               </p>
             </div>
           </FadeIn>
@@ -151,7 +155,9 @@ export default function Home() {
                 key={skill.group}
                 className="grid grid-cols-1 gap-x-8 gap-y-1 sm:grid-cols-[14rem_1fr]"
               >
-                <dt className="text-[15px] text-muted">{skill.group}</dt>
+                <dt className="font-mono text-[13px] tracking-[0.08em] text-muted uppercase">
+                  {skill.group}
+                </dt>
                 <dd>
                   <ul className="flex flex-wrap gap-x-1.5 text-[17px] leading-relaxed">
                     {skill.items.map((name, i) => (
@@ -184,7 +190,7 @@ export default function Home() {
                   <p className="text-4xl leading-none font-medium tracking-[-0.03em] text-accent tabular-nums">
                     <CountUp value={item.rating} />
                   </p>
-                  <p className="mt-3 flex items-center gap-2 text-[15px] text-muted">
+                  <p className="mt-3 flex items-center gap-2 font-mono text-[13px] text-muted">
                     <a
                       href={item.href}
                       target="_blank"
@@ -194,7 +200,7 @@ export default function Home() {
                       {item.site}
                     </a>
                     {item.note && (
-                      <span className="rounded-full border border-accent/40 px-2 py-0.5 text-[13px] leading-none text-accent">
+                      <span className="rounded-full border border-accent/40 px-2 py-0.5 text-[12px] leading-none text-accent">
                         {item.note}
                       </span>
                     )}
@@ -266,7 +272,7 @@ export default function Home() {
               />
             </p>
             <FadeIn delay={0.3}>
-              <div className="mt-8 flex flex-col justify-between gap-3 text-[15px] text-muted sm:flex-row">
+              <div className="mt-8 flex flex-col justify-between gap-3 font-mono text-[13px] text-muted sm:flex-row">
                 <p>
                   Made with love by{" "}
                   <a

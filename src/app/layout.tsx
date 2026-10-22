@@ -1,11 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Sans } from "next/font/google";
+import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import { MathBackground } from "@/components/math-background";
 import { ScrollProgress } from "@/components/scroll-progress";
 import "./globals.css";
 
-const instrumentSans = Instrument_Sans({
-  variable: "--font-instrument-sans",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
 
@@ -28,7 +33,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${instrumentSans.variable} antialiased`}>
+    <html
+      lang="en"
+      className={`${bricolage.variable} ${jetbrainsMono.variable} antialiased`}
+    >
       <body className="min-h-dvh">
         <MathBackground />
         <ScrollProgress />
