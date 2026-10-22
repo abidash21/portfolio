@@ -112,7 +112,16 @@ p {
   transition: transform 260ms var(--ease-out);
 }
 
+/* Name letters: snap to neon on hover, fade back slowly — leaves a trail. */
+.split-char-hover {
+  transition: color 700ms var(--ease-out);
+}
+
 @media (hover: hover) and (pointer: fine) {
+  .split-char-hover:hover {
+    color: var(--accent);
+    transition-duration: 80ms;
+  }
   .link:hover {
     color: var(--accent);
     text-decoration-color: var(--accent);

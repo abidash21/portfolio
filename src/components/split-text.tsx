@@ -8,6 +8,7 @@ type SplitTextProps = {
   by?: "word" | "char";
   delay?: number;
   stagger?: number;
+  hoverAccent?: boolean;
 };
 
 // Reveals text a word (or letter) at a time, each rising out of its own
@@ -17,6 +18,7 @@ export function SplitText({
   by = "word",
   delay = 0,
   stagger = by === "char" ? 0.03 : 0.06,
+  hoverAccent = false,
 }: SplitTextProps) {
   const reduceMotion = useReducedMotion();
   const words = text.split(" ");
@@ -39,7 +41,11 @@ export function SplitText({
                     className="inline-block overflow-hidden pb-[0.08em] align-bottom"
                   >
                     <motion.span
-                      className="inline-block"
+                      className={
+                        hoverAccent
+                          ? "split-char-hover inline-block"
+                          : "inline-block"
+                      }
                       initial={{ opacity: 0, transform: "translateY(105%)" }}
                       whileInView={{ opacity: 1, transform: "translateY(0%)" }}
                       viewport={{ once: true, margin: "0px 0px -60px 0px" }}

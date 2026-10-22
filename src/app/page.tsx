@@ -58,7 +58,7 @@ function Hero() {
           id="hero-title"
           className="text-[clamp(3.5rem,11vw,9.5rem)] leading-[0.92] font-medium tracking-[-0.04em]"
         >
-          <SplitText text={profile.name} by="char" />
+          <SplitText text={profile.name} by="char" hoverAccent />
         </h1>
         <FadeIn delay={0.45}>
           <p className="mt-8 max-w-[34ch] text-2xl leading-snug text-ink">
@@ -258,7 +258,12 @@ export default function Home() {
               aria-hidden="true"
               className="text-[clamp(3rem,11.5vw,11rem)] leading-[0.9] font-medium tracking-[-0.04em] whitespace-nowrap text-ink"
             >
-              <SplitText text={profile.name} by="char" stagger={0.025} />
+              <SplitText
+                text={profile.name}
+                by="char"
+                stagger={0.025}
+                hoverAccent
+              />
             </p>
             <FadeIn delay={0.3}>
               <div className="mt-8 flex flex-col justify-between gap-3 text-[15px] text-muted sm:flex-row">
