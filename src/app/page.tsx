@@ -118,20 +118,15 @@ function Work() {
               </p>
             </div>
           </FadeIn>
-          <ul className="flex flex-col gap-10 md:col-span-8">
-            {role.highlights.map((item, i) => (
+          <ul className="flex list-disc flex-col gap-4 pl-5 marker:text-accent md:col-span-8">
+            {role.highlights.map((text, i) => (
               <FadeIn
                 as="li"
-                key={item.text}
+                key={text}
                 delay={Math.min(i, 3) * 0.06}
-                className="grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-[7.5rem_1fr]"
+                className="max-w-[62ch] text-[17px] leading-relaxed"
               >
-                <span className="text-4xl leading-none font-medium tracking-[-0.03em] text-accent tabular-nums">
-                  {item.figure && <CountUp value={item.figure} />}
-                </span>
-                <p className="max-w-[62ch] text-[17px] leading-relaxed">
-                  {item.text}
-                </p>
+                {text}
               </FadeIn>
             ))}
           </ul>
@@ -190,7 +185,14 @@ export default function Home() {
                     <CountUp value={item.rating} />
                   </p>
                   <p className="mt-3 flex items-center gap-2 text-[15px] text-muted">
-                    {item.site}
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="link"
+                    >
+                      {item.site}
+                    </a>
                     {item.note && (
                       <span className="rounded-full border border-accent/40 px-2 py-0.5 text-[13px] leading-none text-accent">
                         {item.note}
@@ -201,7 +203,7 @@ export default function Home() {
               ))}
             </ul>
 
-            <ul className="flex flex-col gap-3 text-[17px] leading-relaxed">
+            <ul className="flex list-disc flex-col gap-3 pl-5 text-[17px] leading-relaxed marker:text-accent">
               {achievements.map((item, i) => (
                 <FadeIn
                   as="li"
@@ -260,7 +262,18 @@ export default function Home() {
             </p>
             <FadeIn delay={0.3}>
               <div className="mt-8 flex flex-col justify-between gap-3 text-[15px] text-muted sm:flex-row">
-                <p>Built with Next.js, Tailwind CSS and Motion.</p>
+                <p>
+                  Made with love by{" "}
+                  <a
+                    href="https://ashutoshdash.in?utm_source=abinash-dash-portfolio"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link"
+                  >
+                    Ashutosh Dash
+                  </a>{" "}
+                  · Built with Next.js, Tailwind CSS and Motion.
+                </p>
                 <div className="flex gap-6">
                   {profile.links.map((link) => (
                     <a
