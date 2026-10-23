@@ -1,9 +1,10 @@
-import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import { MathBackground } from "@/components/math-background";
 import { ScrollProgress } from "@/components/scroll-progress";
 import { profile } from "@/content/resume";
 import { site, siteUrl } from "@/content/site";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import type { Metadata, Viewport } from "next";
+import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -68,6 +69,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <MathBackground />
         <ScrollProgress />
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
