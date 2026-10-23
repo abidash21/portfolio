@@ -2,6 +2,7 @@ import { MathBackground } from "@/components/math-background";
 import { ScrollProgress } from "@/components/scroll-progress";
 import { profile } from "@/content/resume";
 import { site, siteUrl } from "@/content/site";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
@@ -70,6 +71,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ScrollProgress />
         {children}
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
