@@ -6,9 +6,8 @@ Personal portfolio of **Abinash Dash**, Software Engineer based in Bengaluru, bu
      ![Portfolio home page](docs/screenshot.png) -->
 
 <p align="center">
-  <br />
-  <em>Screenshot coming soon</em>
-  <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+ <img width="1280" height="711" alt="Screenshot 2026-11-04 at 5 50 22 PM" src="https://github.com/user-attachments/assets/f3e3ee79-4d18-4f3c-9479-ba4554032e16" />
+
 </p>
 
 ## About
